@@ -7,7 +7,7 @@ import { WeekFilter, type WeekRange } from "@/components/WeekFilter";
 import {
   useDailyEarningsApi,
   type DailyEarningRow,
-} from "@/hooks/useDailyEarningsApi";
+} from "@/hooks/useDailyEarningsAPi";
 import { LoadingDataState } from "@/loaders/dataLoader";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
