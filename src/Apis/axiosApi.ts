@@ -2,8 +2,9 @@ import { logoutAction, setCredentials } from "@/slices/authSlice";
 import { store } from "@/store/store";
 import axios from "axios";
 
+const baseURL = "https://business-management-backend-5hri.onrender.com";
 export const api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: baseURL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -62,7 +63,7 @@ api.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          "http://localhost:5000/api/v1/auth/refresh",
+          `${baseURL}/api/v1/auth/refresh`,
           {},
           { withCredentials: true },
         );
