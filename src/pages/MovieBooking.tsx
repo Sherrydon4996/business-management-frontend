@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Clapperboard, Plus, Trash2, Loader2, Pencil } from "lucide-react";
-import { formatKenyanDateTime } from "@/lib/mockData";
 import { WeekFilter, type WeekRange } from "@/components/WeekFilter";
 import {
   useMovieBookingsApi,
@@ -37,6 +36,7 @@ import {
   type BookingStatus,
 } from "@/hooks/useMovieBookingsApi";
 import { LoadingDataState } from "@/loaders/dataLoader";
+import { formatKenyanDateTime } from "@/utils/utils";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

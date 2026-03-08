@@ -18,7 +18,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useDashboardApi } from "@/hooks/useDashboardApi";
-import { formatKenyanDateTime } from "@/lib/mockData";
 import { DashboardSkeleton } from "@/loaders/spinner";
 import {
   LineChart,
@@ -35,6 +34,7 @@ import {
   Bar,
   Legend,
 } from "recharts";
+import { formatKenyanDateTime } from "@/utils/utils";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ const TOOLTIP_STYLE = {
   background: "#fff",
   fontSize: 12,
   boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
-  color: "#202124",
+  color: "#141518",
 };
 
 // ─── Period Card ──────────────────────────────────────────────────────────────

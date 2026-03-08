@@ -30,9 +30,10 @@ import {
   CalendarDays,
   Loader2,
 } from "lucide-react";
-import { formatKenyanDateTime } from "@/lib/mockData";
+
 import { useCyberServicesApi } from "@/hooks/useCyberServicesApi";
 import { LoadingDataState } from "@/loaders/dataLoader";
+import { formatKenyanDateTime } from "@/utils/utils";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
