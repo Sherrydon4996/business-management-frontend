@@ -1,6 +1,7 @@
 import { logoutAction, setCredentials } from "@/slices/authSlice";
 import { store } from "@/store/store";
 import axios from "axios";
+// const baseURL = "http://localhost:5000";
 
 const baseURL = "https://business-management-backend-5hri.onrender.com";
 export const api = axios.create({
