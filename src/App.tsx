@@ -13,7 +13,7 @@ import { SessionExpiryListener } from "./Apis/SessionExpiryListener";
 import { useAppSelector } from "./store/hooks";
 // Public pages
 import LandingPage from "./components/LandingPage2"; // or your Index / Home landing
-import Login from "./pages/Login";
+
 // Protected pages (rendered inside Layout)
 import Income from "./pages/Income";
 
@@ -34,6 +34,7 @@ import Expenses from "./pages/Expences";
 import Dashboard from "./pages";
 import { AuthProvider } from "./contexts/AuthContext";
 import ComputerSessions from "./pages/ComputerSessions";
+import Debts from "./pages/Debts";
 
 const queryClient = new QueryClient();
 
@@ -124,10 +125,10 @@ function AppRoutes() {
         <Route path="/daily-earnings" element={<DailyEarnings />} />
         <Route path="/weekly-summary" element={<WeeklySummary />} />
         <Route path="/computer-sessions" element={<ComputerSessions />} />
-
         <Route path="/reports" element={<Reports />} />
         <Route path="/ai-assistant" element={<AIAssistant />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/debts" element={<Debts />} />
 
         {/* Optional: redirect / to dashboard when already logged in */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

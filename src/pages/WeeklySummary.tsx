@@ -26,6 +26,7 @@ import {
   PiggyBank,
   Calendar,
   CalendarDays,
+  HandCoins,
 } from "lucide-react";
 import { MONTHS_LABELS } from "@/utils/utils";
 import { useWeeklySummaryApi } from "@/hooks/useWeeklysummaryApi";
@@ -72,13 +73,13 @@ export default function WeeklySummary() {
     selectedYear,
   );
 
-  // Totals for the selected month's 4 weeks (used in the summary cards)
   const totals = useMemo(
     () => ({
       earnings: weeks.reduce((s, w) => s + w.earnings, 0),
       contributions: weeks.reduce((s, w) => s + w.contributions, 0),
       expenses: weeks.reduce((s, w) => s + w.expenses, 0),
       savings: weeks.reduce((s, w) => s + w.savings, 0),
+      debtOutstanding: weeks.reduce((s, w) => s + (w.debtOutstanding ?? 0), 0),
     }),
     [weeks],
   );
@@ -89,7 +90,8 @@ export default function WeeklySummary() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Weekly Summary</h1>
         <p className="text-muted-foreground mt-1">
-          Weekly breakdown of earnings, contributions, expenses &amp; savings
+          Weekly breakdown of earnings, contributions, expenses, debts &amp;
+          savings
         </p>
       </div>
 
@@ -128,8 +130,8 @@ export default function WeeklySummary() {
         </Select>
       </div>
 
-      {/* Summary Cards — totals for the selected month */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
@@ -174,6 +176,27 @@ export default function WeeklySummary() {
                 <p className="text-xs text-muted-foreground">Total Expenses</p>
                 <p className="text-lg font-bold text-foreground">
                   KES {totals.expenses.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Debt Outstanding card */}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-amber-500/15 flex items-center justify-center">
+                <HandCoins className="w-5 h-5 text-amber-600" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">
+                  Outstanding Debt
+                </p>
+                <p
+                  className={`text-lg font-bold ${totals.debtOutstanding > 0 ? "text-amber-600" : "text-muted-foreground"}`}
+                >
+                  KES {totals.debtOutstanding.toLocaleString()}
                 </p>
               </div>
             </div>
@@ -225,6 +248,7 @@ export default function WeeklySummary() {
                         Contributions
                       </TableHead>
                       <TableHead className="text-right">Expenses</TableHead>
+                      <TableHead className="text-right">Debt</TableHead>
                       <TableHead className="text-right">Savings</TableHead>
                       <TableHead className="text-center">Status</TableHead>
                     </TableRow>
@@ -248,6 +272,15 @@ export default function WeeklySummary() {
                           KES {week.expenses.toLocaleString()}
                         </TableCell>
                         <TableCell
+                          className={`text-right font-medium ${
+                            (week.debtOutstanding ?? 0) > 0
+                              ? "text-amber-600"
+                              : "text-muted-foreground/50"
+                          }`}
+                        >
+                          KES {(week.debtOutstanding ?? 0).toLocaleString()}
+                        </TableCell>
+                        <TableCell
                           className={`text-right font-bold ${week.savings >= 0 ? "text-emerald-600" : "text-red-600"}`}
                         >
                           KES {week.savings.toLocaleString()}
@@ -266,7 +299,7 @@ export default function WeeklySummary() {
                     {weeks.length === 0 && (
                       <TableRow>
                         <TableCell
-                          colSpan={7}
+                          colSpan={8}
                           className="py-8 text-center text-muted-foreground"
                         >
                           No data for this period.
@@ -285,7 +318,7 @@ export default function WeeklySummary() {
         </CardContent>
       </Card>
 
-      {/* Monthly & Yearly Summary Totals — always "current" from the server */}
+      {/* Monthly & Yearly Summary Totals */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Monthly */}
         <Card className="p-5 border-border">
@@ -318,6 +351,14 @@ export default function WeeklySummary() {
                 <span className="text-muted-foreground">Expenses</span>
                 <span className="font-medium text-destructive">
                   KES {monthlyTotals.expenses.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Outstanding Debt</span>
+                <span
+                  className={`font-medium ${(monthlyTotals.debtOutstanding ?? 0) > 0 ? "text-amber-600" : "text-muted-foreground/50"}`}
+                >
+                  KES {(monthlyTotals.debtOutstanding ?? 0).toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between border-t border-border pt-1 mt-1">
@@ -364,6 +405,14 @@ export default function WeeklySummary() {
                 <span className="text-muted-foreground">Expenses</span>
                 <span className="font-medium text-destructive">
                   KES {yearlyTotals.expenses.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Outstanding Debt</span>
+                <span
+                  className={`font-medium ${(yearlyTotals.debtOutstanding ?? 0) > 0 ? "text-amber-600" : "text-muted-foreground/50"}`}
+                >
+                  KES {(yearlyTotals.debtOutstanding ?? 0).toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between border-t border-border pt-1 mt-1">

@@ -36,6 +36,7 @@ const navItems = [
   { to: "/computer-sessions", label: "Computer Sessions", icon: Monitor },
   { to: "/reports", label: "Reports", icon: BarChart3 },
   { to: "/ai-assistant", label: "AI Assistant", icon: Bot },
+  { to: "/debts", label: "Debts", icon: Calculator },
 ];
 
 const adminItems = [{ to: "/settings", label: "Settings", icon: Settings }];

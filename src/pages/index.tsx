@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import {
-  TrendingUp,
-  TrendingDown,
   PiggyBank,
   Plus,
   Minus,
@@ -14,6 +12,7 @@ import {
   CalendarCheck2,
   ArrowUpRight,
   ArrowDownRight,
+  HandCoins,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -36,8 +35,6 @@ import {
 } from "recharts";
 import { formatKenyanDateTime } from "@/utils/utils";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
 const COLORS = [
   "#1A73E8",
   "#34A853",
@@ -56,7 +53,7 @@ const TOOLTIP_STYLE = {
   color: "#141518",
 };
 
-// ─── Period Card ──────────────────────────────────────────────────────────────
+// ─── Period Card — original layout, one debt line at the bottom ───────────────
 
 interface PeriodCardProps {
   icon: React.ElementType;
@@ -64,6 +61,7 @@ interface PeriodCardProps {
   income: number;
   expenses: number;
   profit: number;
+  debtOutstanding: number;
   delay?: number;
 }
 
@@ -73,10 +71,10 @@ function PeriodCard({
   income,
   expenses,
   profit,
+  debtOutstanding,
   delay = 0,
 }: PeriodCardProps) {
   const isPositive = profit >= 0;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -84,13 +82,11 @@ function PeriodCard({
       transition={{ delay, duration: 0.28 }}
       className="relative overflow-hidden rounded-xl border border-border bg-card flex flex-col"
     >
-      {/* Top accent bar */}
       <div
         className={`h-[3px] w-full ${isPositive ? "bg-gradient-to-r from-emerald-500 to-emerald-400" : "bg-gradient-to-r from-red-500 to-red-400"}`}
       />
 
       <div className="px-5 pt-4 pb-5 flex flex-col gap-3">
-        {/* Header row */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
@@ -107,7 +103,6 @@ function PeriodCard({
           )}
         </div>
 
-        {/* Net profit — hero number */}
         <div>
           <p
             className={`text-[26px] font-semibold tabular-nums leading-none tracking-tight ${isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}
@@ -123,10 +118,9 @@ function PeriodCard({
           </p>
         </div>
 
-        {/* Divider */}
         <div className="h-px bg-border" />
 
-        {/* Income / Expenses row */}
+        {/* Income / Expenses */}
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-1.5">
@@ -150,6 +144,22 @@ function PeriodCard({
               KES {expenses.toLocaleString()}
             </p>
           </div>
+        </div>
+
+        {/* Outstanding debt — single unobtrusive row */}
+        <div className="h-px bg-border" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <HandCoins className="w-3 h-3 text-muted-foreground/60" />
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+              Outstanding Debt
+            </span>
+          </div>
+          <span
+            className={`text-[12px] font-semibold tabular-nums ${debtOutstanding > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground/50"}`}
+          >
+            KES {debtOutstanding.toLocaleString()}
+          </span>
         </div>
       </div>
     </motion.div>
@@ -182,7 +192,7 @@ function ChartPanel({
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function Index() {
   const navigate = useNavigate();
@@ -194,15 +204,19 @@ export default function Index() {
     todayIncome: stats?.todayIncome ?? 0,
     todayExpenses: stats?.todayExpenses ?? 0,
     todayProfit: stats?.todayProfit ?? 0,
+    todayDebtOutstanding: stats?.todayDebtOutstanding ?? 0,
     weekIncome: stats?.weekIncome ?? 0,
     weekExpenses: stats?.weekExpenses ?? 0,
     weekProfit: stats?.weekProfit ?? 0,
+    weekDebtOutstanding: stats?.weekDebtOutstanding ?? 0,
     monthIncome: stats?.monthIncome ?? 0,
     monthExpenses: stats?.monthExpenses ?? 0,
     monthProfit: stats?.monthProfit ?? 0,
+    monthDebtOutstanding: stats?.monthDebtOutstanding ?? 0,
     yearIncome: stats?.yearIncome ?? 0,
     yearExpenses: stats?.yearExpenses ?? 0,
     yearProfit: stats?.yearProfit ?? 0,
+    yearDebtOutstanding: stats?.yearDebtOutstanding ?? 0,
     last30Days: stats?.last30Days ?? [],
     incomeByCat: stats?.incomeByCat ?? [],
     expensesByCat: stats?.expensesByCat ?? [],
@@ -212,7 +226,7 @@ export default function Index() {
 
   return (
     <div className="space-y-7 pb-10 max-w-[1200px]">
-      {/* ── Page header ── */}
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -261,7 +275,7 @@ export default function Index() {
         </div>
       </motion.div>
 
-      {/* ── 4 Period Cards ── */}
+      {/* Period Cards */}
       <div>
         <div className="flex items-center gap-2 mb-3">
           <BarChart3 className="w-3.5 h-3.5 text-muted-foreground" />
@@ -276,6 +290,7 @@ export default function Index() {
             income={s.todayIncome}
             expenses={s.todayExpenses}
             profit={s.todayProfit}
+            debtOutstanding={s.todayDebtOutstanding}
             delay={0.05}
           />
           <PeriodCard
@@ -284,6 +299,7 @@ export default function Index() {
             income={s.weekIncome}
             expenses={s.weekExpenses}
             profit={s.weekProfit}
+            debtOutstanding={s.weekDebtOutstanding}
             delay={0.1}
           />
           <PeriodCard
@@ -292,6 +308,7 @@ export default function Index() {
             income={s.monthIncome}
             expenses={s.monthExpenses}
             profit={s.monthProfit}
+            debtOutstanding={s.monthDebtOutstanding}
             delay={0.15}
           />
           <PeriodCard
@@ -300,14 +317,19 @@ export default function Index() {
             income={s.yearIncome}
             expenses={s.yearExpenses}
             profit={s.yearProfit}
+            debtOutstanding={s.yearDebtOutstanding}
             delay={0.2}
           />
         </div>
       </div>
 
-      {/* ── Charts ── */}
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartPanel title="Income vs Expenses — Last 30 Days" delay={0.3}>
+        {/* Line — income, expenses + debt outstanding */}
+        <ChartPanel
+          title="Income vs Expenses vs Debt — Last 30 Days"
+          delay={0.3}
+        >
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={s.last30Days} margin={{ left: -10, right: 4 }}>
               <CartesianGrid
@@ -343,6 +365,14 @@ export default function Index() {
                 stroke="#EA4335"
                 strokeWidth={2}
                 dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="debtOutstanding"
+                stroke="#F59E0B"
+                strokeWidth={2}
+                dot={false}
+                strokeDasharray="4 3"
               />
               <Legend wrapperStyle={{ fontSize: 11 }} />
             </LineChart>
@@ -441,7 +471,7 @@ export default function Index() {
         </ChartPanel>
       </div>
 
-      {/* ── Recent Transactions ── */}
+      {/* Recent Transactions */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -472,11 +502,7 @@ export default function Index() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <span
-                      className={`shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-sm ${
-                        t.type === "income"
-                          ? "bg-blue-500/10 text-[#1A73E8]"
-                          : "bg-red-500/10 text-red-500"
-                      }`}
+                      className={`shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-sm ${t.type === "income" ? "bg-blue-500/10 text-[#1A73E8]" : "bg-red-500/10 text-red-500"}`}
                     >
                       {t.type === "income" ? "INCOME" : "EXPENSE"}
                     </span>
@@ -494,11 +520,7 @@ export default function Index() {
                   </p>
                 </div>
                 <span
-                  className={`shrink-0 text-[13px] font-semibold tabular-nums whitespace-nowrap ${
-                    t.type === "income"
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-red-500"
-                  }`}
+                  className={`shrink-0 text-[13px] font-semibold tabular-nums whitespace-nowrap ${t.type === "income" ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}
                 >
                   {t.type === "income" ? "+" : "−"} KES{" "}
                   {t.amount.toLocaleString()}
@@ -522,9 +544,7 @@ export default function Index() {
                 ].map((h, i) => (
                   <th
                     key={h}
-                    className={`py-2.5 px-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.06em] border-b border-border ${
-                      i === 4 ? "text-right" : "text-left"
-                    }`}
+                    className={`py-2.5 px-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.06em] border-b border-border ${i === 4 ? "text-right" : "text-left"}`}
                   >
                     {h}
                   </th>
@@ -542,11 +562,7 @@ export default function Index() {
                   </td>
                   <td className="py-2.5 px-4">
                     <span
-                      className={`text-[11px] font-semibold px-2 py-0.5 rounded-sm ${
-                        t.type === "income"
-                          ? "bg-blue-500/10 text-[#1A73E8]"
-                          : "bg-red-500/10 text-red-500"
-                      }`}
+                      className={`text-[11px] font-semibold px-2 py-0.5 rounded-sm ${t.type === "income" ? "bg-blue-500/10 text-[#1A73E8]" : "bg-red-500/10 text-red-500"}`}
                     >
                       {t.type === "income" ? "INCOME" : "EXPENSE"}
                     </span>
@@ -556,11 +572,7 @@ export default function Index() {
                     {t.description}
                   </td>
                   <td
-                    className={`py-2.5 px-4 text-right font-semibold tabular-nums whitespace-nowrap ${
-                      t.type === "income"
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-red-500"
-                    }`}
+                    className={`py-2.5 px-4 text-right font-semibold tabular-nums whitespace-nowrap ${t.type === "income" ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}
                   >
                     {t.type === "income" ? "+" : "−"} KES{" "}
                     {t.amount.toLocaleString()}

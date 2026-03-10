@@ -35,15 +35,14 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WeekFilter, type WeekRange } from "@/components/WeekFilter";
-import { formatKenyanDateTime, MONTHS_LABELS } from "@/utils/utils";
-
+import { MONTHS_LABELS } from "@/utils/utils";
+import { formatKenyanDateTime } from "@/lib/mockData";
 import {
   useContributionsApi,
   type Contribution,
   type ContributionType,
   type ContributionStatus,
 } from "@/hooks/useContributionsApi";
-import { LoadingDataState } from "@/loaders/dataLoader";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -57,8 +56,8 @@ const CONTRIBUTION_STATUSES: ContributionStatus[] = [
 
 const TYPE_DEFAULTS: Record<ContributionType, number | null> = {
   weekly_group: 500,
-  cooperative_bank: 1000,
-  caritas_bank: 500,
+  cooperative_bank: 1500,
+  caritas_bank: 1500,
   custom: null,
 };
 
@@ -303,10 +302,9 @@ export default function Contributions() {
   const renderTable = (data: Contribution[]) => (
     <div className="overflow-x-auto">
       {contributionsLoading ? (
-        <LoadingDataState
-          title="contributions"
-          text="fetching contribution data"
-        />
+        <div className="flex justify-center py-12">
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        </div>
       ) : (
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
@@ -475,10 +473,10 @@ export default function Contributions() {
                       Weekly Group (500 KES)
                     </SelectItem>
                     <SelectItem value="cooperative_bank">
-                      Cooperative Bank (1,000 KES)
+                      Cooperative Bank (1,500 KES)
                     </SelectItem>
                     <SelectItem value="caritas_bank">
-                      Caritas Bank (500 KES)
+                      Caritas Bank (1,500 KES)
                     </SelectItem>
                     <SelectItem value="custom">Custom</SelectItem>
                   </SelectContent>
@@ -575,10 +573,10 @@ export default function Contributions() {
                     Weekly Group (500 KES)
                   </SelectItem>
                   <SelectItem value="cooperative_bank">
-                    Cooperative Bank (1,000 KES)
+                    Cooperative Bank (1,500 KES)
                   </SelectItem>
                   <SelectItem value="caritas_bank">
-                    Caritas Bank (500 KES)
+                    Caritas Bank (1,500 KES)
                   </SelectItem>
                   <SelectItem value="custom">Custom</SelectItem>
                 </SelectContent>
@@ -707,14 +705,41 @@ export default function Contributions() {
         transition={{ delay: 0.2 }}
       >
         <Tabs defaultValue="weekly" className="w-full">
-          <TabsList className="mb-4">
-            <TabsTrigger value="weekly">Weekly Group (500 KES)</TabsTrigger>
-            <TabsTrigger value="cooperative">
-              Cooperative Bank (1,000 KES)
-            </TabsTrigger>
-            <TabsTrigger value="caritas">Caritas Bank (500 KES)</TabsTrigger>
-            <TabsTrigger value="custom">Custom</TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto pb-1 -mx-1 px-1">
+            <TabsList className="mb-4 w-max min-w-full sm:w-full flex">
+              <TabsTrigger
+                value="weekly"
+                className="flex-1 whitespace-nowrap text-xs sm:text-sm"
+              >
+                <span className="sm:hidden">Weekly</span>
+                <span className="hidden sm:inline">Weekly Group (500 KES)</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="cooperative"
+                className="flex-1 whitespace-nowrap text-xs sm:text-sm"
+              >
+                <span className="sm:hidden">Co-op Bank</span>
+                <span className="hidden sm:inline">
+                  Cooperative Bank (1,500 KES)
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="caritas"
+                className="flex-1 whitespace-nowrap text-xs sm:text-sm"
+              >
+                <span className="sm:hidden">Caritas</span>
+                <span className="hidden sm:inline">
+                  Caritas Bank (1,500 KES)
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="custom"
+                className="flex-1 whitespace-nowrap text-xs sm:text-sm"
+              >
+                Custom
+              </TabsTrigger>
+            </TabsList>
+          </div>
           <TabsContent
             value="weekly"
             className="bg-card rounded-xl border border-border shadow-sm overflow-hidden"

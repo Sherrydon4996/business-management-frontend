@@ -23,6 +23,7 @@ export interface PeriodTotals {
   contributions: number;
   expenses: number;
   savings: number;
+  debtOutstanding: number;
 }
 
 export interface WeeklySummaryData {

@@ -84,8 +84,6 @@ export default function Settings() {
   // Populated from /api/v1/auth/login and /api/v1/auth/refresh via setCredentials
   const { user } = useAuth();
 
-  console.log(user);
-
   const {
     users,
     usersLoading,
