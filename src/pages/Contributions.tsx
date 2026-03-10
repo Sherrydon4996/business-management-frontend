@@ -36,7 +36,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WeekFilter, type WeekRange } from "@/components/WeekFilter";
 import { MONTHS_LABELS } from "@/utils/utils";
-import { formatKenyanDateTime } from "@/lib/mockData";
+import { formatKenyanDateTime } from "@/utils/utils";
 import {
   useContributionsApi,
   type Contribution,
