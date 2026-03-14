@@ -56,8 +56,8 @@ const CONTRIBUTION_STATUSES: ContributionStatus[] = [
 
 const TYPE_DEFAULTS: Record<ContributionType, number | null> = {
   weekly_group: 500,
-  cooperative_bank: 1500,
-  caritas_bank: 1500,
+  cooperative_bank: 1000,
+  caritas_bank: 500,
   custom: null,
 };
 
@@ -473,10 +473,10 @@ export default function Contributions() {
                       Weekly Group (500 KES)
                     </SelectItem>
                     <SelectItem value="cooperative_bank">
-                      Cooperative Bank (1,500 KES)
+                      Cooperative Bank (1000 KES)
                     </SelectItem>
                     <SelectItem value="caritas_bank">
-                      Caritas Bank (1,500 KES)
+                      Caritas Bank (500 KES)
                     </SelectItem>
                     <SelectItem value="custom">Custom</SelectItem>
                   </SelectContent>
@@ -573,10 +573,10 @@ export default function Contributions() {
                     Weekly Group (500 KES)
                   </SelectItem>
                   <SelectItem value="cooperative_bank">
-                    Cooperative Bank (1,500 KES)
+                    Cooperative Bank (1000 KES)
                   </SelectItem>
                   <SelectItem value="caritas_bank">
-                    Caritas Bank (1,500 KES)
+                    Caritas Bank (500 KES)
                   </SelectItem>
                   <SelectItem value="custom">Custom</SelectItem>
                 </SelectContent>
@@ -720,7 +720,7 @@ export default function Contributions() {
               >
                 <span className="sm:hidden">Co-op Bank</span>
                 <span className="hidden sm:inline">
-                  Cooperative Bank (1,500 KES)
+                  Cooperative Bank (1000 KES)
                 </span>
               </TabsTrigger>
               <TabsTrigger
@@ -728,9 +728,7 @@ export default function Contributions() {
                 className="flex-1 whitespace-nowrap text-xs sm:text-sm"
               >
                 <span className="sm:hidden">Caritas</span>
-                <span className="hidden sm:inline">
-                  Caritas Bank (1,500 KES)
-                </span>
+                <span className="hidden sm:inline">Caritas Bank (500 KES)</span>
               </TabsTrigger>
               <TabsTrigger
                 value="custom"

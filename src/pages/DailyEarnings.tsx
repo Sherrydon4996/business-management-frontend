@@ -7,28 +7,14 @@ import { WeekFilter, type WeekRange } from "@/components/WeekFilter";
 import {
   useDailyEarningsApi,
   type DailyEarningRow,
-} from "@/hooks/useDailyEarningsAPi";
+} from "@/hooks/useDailyEarningsApi";
 import { LoadingDataState } from "@/loaders/dataLoader";
+import { MONTHS_LABELS } from "@/utils/utils";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const getKenyanNow = () =>
   new Date(new Date().toLocaleString("en-US", { timeZone: "Africa/Nairobi" }));
-
-const MONTHS_LABELS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 
 /** Returns a YYYY-MM-DD string from a Date in Kenyan time */
 const toDateKey = (d: Date): string => {
@@ -54,14 +40,18 @@ const buildWeekDays = (range: WeekRange): string[] => {
 
 /** Derive the current week's Monday–Sunday range from a Kenyan "now" date */
 const getCurrentWeekRange = (now: Date): WeekRange => {
-  const day = now.getDay(); // 0 = Sun … 6 = Sat
-  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const day = now.getDay(); // 0=Sun, 1=Mon … 6=Sat
+  const diffToMonday = day === 0 ? -6 : 1 - day; // how many days back to Monday
+
   const monday = new Date(now);
   monday.setDate(now.getDate() + diffToMonday);
   monday.setHours(0, 0, 0, 0);
+  monday.setMilliseconds(0);
+
   const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
+  sunday.setDate(monday.getDate() + 6); // Monday + 6 = Sunday
   sunday.setHours(23, 59, 59, 999);
+
   return { start: monday, end: sunday };
 };
 
