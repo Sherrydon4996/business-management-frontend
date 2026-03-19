@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 import { Calendar, CalendarDays, TrendingUp, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { WeekFilter, type WeekRange } from "@/components/WeekFilter";
-import {
-  useDailyEarningsApi,
-  type DailyEarningRow,
-} from "@/hooks/useDailyEarningsApi";
 import { LoadingDataState } from "@/loaders/dataLoader";
 import { MONTHS_LABELS } from "@/utils/utils";
+import {
+  DailyEarningRow,
+  useDailyEarningsApi,
+} from "@/hooks/useDailyEarningsApi";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
