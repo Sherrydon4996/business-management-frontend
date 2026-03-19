@@ -6,10 +6,7 @@ import { Card } from "@/components/ui/card";
 import { WeekFilter, type WeekRange } from "@/components/WeekFilter";
 import { LoadingDataState } from "@/loaders/dataLoader";
 import { MONTHS_LABELS } from "@/utils/utils";
-import {
-  DailyEarningRow,
-  useDailyEarningsApi,
-} from "@/hooks/useDailyEarningsApi";
+import { DailyEarningRow, useDailyEarningsApi } from "@/hooks/useEarningsApi";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
