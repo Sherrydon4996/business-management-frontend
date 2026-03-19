@@ -47,32 +47,34 @@ export function getWeeksForMonth(year: number, month: number): WeekRange[] {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
 
-  let weekStart = new Date(firstDay);
-  let weekNum = 1;
+  // Snap back to the Monday of the week that contains the 1st
+  const dow = firstDay.getDay(); // 0=Sun,1=Mon...6=Sat
+  const diffToMonday = dow === 0 ? -6 : 1 - dow;
+  const weekStart = new Date(firstDay);
+  weekStart.setDate(firstDay.getDate() + diffToMonday);
+  weekStart.setHours(0, 0, 0, 0);
 
-  while (weekStart <= lastDay && weekNum <= 4) {
-    const weekEnd = new Date(weekStart);
-    if (weekNum < 4) {
-      weekEnd.setDate(weekEnd.getDate() + 6);
-    } else {
-      weekEnd.setTime(lastDay.getTime());
-    }
+  let weekNum = 1;
+  let cursor = new Date(weekStart);
+
+  while (cursor <= lastDay && weekNum <= 4) {
+    const weekEnd = new Date(cursor);
+    weekEnd.setDate(cursor.getDate() + 6); // always Monday+6 = Sunday
     weekEnd.setHours(23, 59, 59, 999);
 
     const formatD = (d: Date) =>
       d.toLocaleDateString("en-KE", { month: "short", day: "numeric" });
 
     weeks.push({
-      start: new Date(weekStart),
+      start: new Date(cursor),
       end: new Date(weekEnd),
       weekNumber: weekNum,
-      label: `Week ${weekNum}: ${formatD(weekStart)} – ${formatD(weekEnd)}`,
+      label: `Week ${weekNum}: ${formatD(cursor)} – ${formatD(weekEnd)}`,
     });
 
-    const nextStart = new Date(weekEnd);
-    nextStart.setDate(nextStart.getDate() + 1);
-    nextStart.setHours(0, 0, 0, 0);
-    weekStart = nextStart;
+    cursor = new Date(weekEnd);
+    cursor.setDate(cursor.getDate() + 1);
+    cursor.setHours(0, 0, 0, 0);
     weekNum++;
   }
 

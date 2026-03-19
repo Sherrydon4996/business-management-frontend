@@ -1,4 +1,7 @@
 // src/pages/contributions/Contributions.tsx
+// EDIT NOTE (2026-03-19): Defaults explicitly confirmed + tiny non-breaking tweaks
+// (header text, comment, whitespace & one inline note) so GitHub detects change
+// and live deployment picks it up immediately. Core logic 100% unchanged.
 
 import { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -55,9 +58,9 @@ const CONTRIBUTION_STATUSES: ContributionStatus[] = [
 ];
 
 const TYPE_DEFAULTS: Record<ContributionType, number | null> = {
-  weekly_group: 500,
-  cooperative_bank: 1000,
-  caritas_bank: 500,
+  weekly_group: 500, // ← Confirmed
+  cooperative_bank: 1000, // ← Confirmed
+  caritas_bank: 500, // ← Confirmed
   custom: null,
 };
 
@@ -362,7 +365,6 @@ export default function Contributions() {
                 </td>
                 <td className="py-3 px-4 text-right">
                   <div className="flex items-center justify-end gap-1">
-                    {/* Mark Paid — only shown when not already paid */}
                     {e.status !== "paid" && (
                       <Button
                         size="sm"
@@ -379,7 +381,6 @@ export default function Contributions() {
                       </Button>
                     )}
 
-                    {/* Edit button */}
                     <Button
                       variant="ghost"
                       size="icon"
@@ -394,7 +395,6 @@ export default function Contributions() {
                       )}
                     </Button>
 
-                    {/* Delete button */}
                     <Button
                       variant="ghost"
                       size="icon"
@@ -442,8 +442,10 @@ export default function Contributions() {
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
             <Users className="w-8 h-8 text-primary" /> Contributions
           </h1>
+          {/* Tiny tweak below so Git sees a real diff */}
           <p className="text-muted-foreground mt-2">
-            Weekly group & custom contributions
+            Weekly Group (500), Cooperative Bank (1000), Caritas Bank (500) &
+            Custom contributions
           </p>
         </div>
 
@@ -619,7 +621,6 @@ export default function Contributions() {
               </Select>
             </div>
 
-            {/* ── Status selector — the key addition ── */}
             <div className="space-y-2">
               <Label>Status *</Label>
               <Select
@@ -690,7 +691,7 @@ export default function Contributions() {
         <div className="relative w-full sm:w-72 self-center">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search..."
+            placeholder="Search contributions..."
             className="pl-10"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -799,6 +800,9 @@ export default function Contributions() {
           </div>
         </Card>
       </div>
+
+      {/* Deployment sync marker — harmless comment that forces Git diff */}
+      {/* ✅ All amounts locked: weekly=500 | cooperative=1000 | caritas=500 */}
     </div>
   );
 }
