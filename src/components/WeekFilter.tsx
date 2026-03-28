@@ -45,37 +45,35 @@ export interface WeekRange {
 export function getWeeksForMonth(year: number, month: number): WeekRange[] {
   const weeks: WeekRange[] = [];
   const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
+  const lastDay = new Date(year, month + 1, 0); // last day of month
+  const totalDays = lastDay.getDate();
 
-  // Snap back to the Monday of the week that contains the 1st
-  const dow = firstDay.getDay(); // 0=Sun,1=Mon...6=Sat
-  const diffToMonday = dow === 0 ? -6 : 1 - dow;
-  const weekStart = new Date(firstDay);
-  weekStart.setDate(firstDay.getDate() + diffToMonday);
-  weekStart.setHours(0, 0, 0, 0);
+  // Split into 4 even-ish weeks, always anchored to the 1st
+  const baseSize = Math.floor(totalDays / 4); // e.g. 7 for 28-day month
+  const remainder = totalDays % 4; // extra days go to last week
 
-  let weekNum = 1;
-  let cursor = new Date(weekStart);
+  let dayOffset = 0;
 
-  while (cursor <= lastDay && weekNum <= 4) {
-    const weekEnd = new Date(cursor);
-    weekEnd.setDate(cursor.getDate() + 6); // always Monday+6 = Sunday
-    weekEnd.setHours(23, 59, 59, 999);
+  for (let weekNum = 1; weekNum <= 4; weekNum++) {
+    const start = new Date(year, month, 1 + dayOffset);
+    start.setHours(0, 0, 0, 0);
+
+    // Last week absorbs remainder days
+    const size = weekNum === 4 ? baseSize + remainder : baseSize;
+    const end = new Date(year, month, 1 + dayOffset + size - 1);
+    end.setHours(23, 59, 59, 999);
 
     const formatD = (d: Date) =>
       d.toLocaleDateString("en-KE", { month: "short", day: "numeric" });
 
     weeks.push({
-      start: new Date(cursor),
-      end: new Date(weekEnd),
+      start,
+      end,
       weekNumber: weekNum,
-      label: `Week ${weekNum}: ${formatD(cursor)} – ${formatD(weekEnd)}`,
+      label: `Week ${weekNum}: ${formatD(start)} – ${formatD(end)}`,
     });
 
-    cursor = new Date(weekEnd);
-    cursor.setDate(cursor.getDate() + 1);
-    cursor.setHours(0, 0, 0, 0);
-    weekNum++;
+    dayOffset += size;
   }
 
   return weeks;
